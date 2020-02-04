@@ -81,15 +81,22 @@ function Book() {
 }
 
 function createDivForBook(bookObject) {
+    let bookDivContainer = document.createElement('div');
     let bookDiv = document.createElement('div');
     bookDiv.innerHTML += `<h2>${bookObject.title}</h2>`;
     bookDiv.innerHTML += `<h4><span class="prefixValues">by </span>${bookObject.author}</h4>`;
     bookDiv.innerHTML += `<h5>${bookObject.numPages} <span>pages</span></h5>`;
     bookDiv.innerHTML += `<h5><span class="prefixValues">Published in </span> ${bookObject.yearPub}</h5>`;
+    let imgButton = document.createElement('button');
+    imgButton.addEventListener('click',deleteBook);
+    imgButton.innerHTML += `<img src="deleteicon.png">`;
     bookDiv.style.backgroundColor = getRandomColor();
-    bookDiv.dataset.bookEntryNum = `${bookObject.bookEntryNum}`;
+    bookDiv.classList.add("bookDetails");
     bookDiv.style.opacity = "0.6";
-    return bookDiv;
+    bookDivContainer.dataset.bookEntryNum = `${bookObject.bookEntryNum}`;
+    bookDivContainer.appendChild(bookDiv);
+    bookDivContainer.appendChild(imgButton);
+    return bookDivContainer;
 }
 
 function render(element) {
@@ -106,9 +113,18 @@ function addBookToLibrary(e) {
     e.preventDefault();
 }
 
+function deleteBook(e) {
+    // remove div then remove from array.
+    let divToRemove = e.target.parentElement.parentElement;
+    let bookEntryKey = divToRemove.dataset.bookEntryNum;
+    divToRemove.parentElement.removeChild(divToRemove);
+    myLibrary.splice(myLibrary.findIndex(obj => obj.bookEntryNum === bookEntryKey),1);
+}
+
 //Event Listeners
 saveBookbtn.addEventListener('click', addBookToLibrary);
 newBookbtn.addEventListener('click', unHideForm);
+
 
 //Prevent Enter
 window.addEventListener('keypress',preventEnterOnButtons);

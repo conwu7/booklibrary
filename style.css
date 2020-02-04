@@ -78,12 +78,26 @@ h2 {
     overflow: auto;
 }
 
-#displayContainer div {
+div.bookDetails {
     margin: 10px 20px;
     border: solid 5px dimgray;
     border-radius: 10px;
+    min-height: 211px;
 }
 
+img {
+    width: 100%;
+    height: auto;
+    margin: 0;
+}
+
+#displayContainer button {
+    display: flex;
+    margin: auto;
+    padding: 0;
+    max-width: 30px;
+    border: none;
+}
 /* Scrollbar testing */
 
 ::-webkit-scrollbar-track

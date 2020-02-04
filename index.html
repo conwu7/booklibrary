@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Library</title>
+    <link href="style.css" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Kulim+Park:400,600,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>My Book Library</h1>
+    <div id="newBookContainer">
+        <button type="button" id="newBookbtn">New Book</button>
+        <div id="newBookForm">
+            <form action="index.html">
+                <label for="title">Title:</label>
+                <input type="text" id="title">
+                <label for="author">Author:</label>
+                <input type="text" id="author">
+                <label for="numPages">Pages:</label>
+                <input type="number" min="1" max="99999" id="numPages">
+                <label for="yearPub">Year Published:</label>
+                <input type="date" id="yearPub">
+                <button type="button" id="readbtn">Completed Reading?</button>
+                <button type="submit" id="saveBookbtn">Save</button>
+            </form>
+        </div>
+    </div>
+    <div id="displayContainer"></div>
+    <script src="soro.js"></script>
+</body>
+</html>

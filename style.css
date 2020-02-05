@@ -24,6 +24,15 @@ button:hover {
     border-radius: 10px;
     padding: 10px;
 }
+button#cancelbtn, button#saveBookbtn {
+    display: inline-block;
+    margin: 15px 30px;
+}
+
+button#cancelbtn {
+    background-color: firebrick;
+    opacity: 0.7;
+}
 
 #newBookContainer input {
     height: 20px;
@@ -98,6 +107,31 @@ img {
     max-width: 30px;
     border: none;
 }
+
+button#deletebtn, button#editbtn {
+    display: inline-block;
+    background-color: antiquewhite;
+}
+
+button#deletebtn {
+    float: right;
+    margin-right: 80px;
+}
+
+button#editbtn {
+    background-color: lightyellow;
+    margin-left: 90px;
+    border: solid lightgrey 1px;
+    padding: 5px 10px;
+    max-width: 50px;
+    border-radius: 10px;
+}
+
+button#editbtn:hover {
+    text-decoration: underline;
+}
+
+
 /* Scrollbar testing */
 
 ::-webkit-scrollbar-track

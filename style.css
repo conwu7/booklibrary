@@ -36,7 +36,7 @@ button#cancelbtn {
 }
 
 #newBookContainer input {
-    height: 20px;
+    height: 27px;
     width: 150px;
 }
 
@@ -181,11 +181,21 @@ button.readbtn {
     background-color: #D62929;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 980px) {
     body {
         font-size: 200%;
     }
     h1 {
         font-size: 300%;
+    }
+    h2 {
+        max-height: 150px;
+    }
+    button.editbtn, button.readbtn, button.deletebtn {
+        transform: scale(2);
+        margin-top: 20px;
+    }
+    label {
+        width: 150px;
     }
 }

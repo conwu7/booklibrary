@@ -82,11 +82,7 @@ function Book(aTitle, aAuthor, aNumPages, aYearPub) {
 }
 
 Book.prototype.toggleReadStatus = function () {
-    if (this.read === false) {
-        this.read = true;
-    } else {
-        this.read = false;
-    }
+    this.read = this.read === false;
 };
 
 //Empty, then populate div
@@ -121,7 +117,7 @@ function createDivContainerForBook(bookObject) {
     let readButton = document.createElement('button');
 
     deleteImgButton.addEventListener('click',deleteBook);
-    deleteImgButton.innerHTML += `<img src="deleteicon.png">`;
+    deleteImgButton.innerHTML += `<img alt="Delete Icon" src="deleteicon.png">`;
     deleteImgButton.classList.add("deletebtn");
 
     editButton.addEventListener('click', editBook);
@@ -181,7 +177,7 @@ function toggleObjReadStatus(e) {
 function validateInputs() {
     let errorMessage = [];
     if (title.value === "" || author.value === "" || numPages.value === "" || yearPub.value === "") {
-        errorMessage.push("Please fill out all fields")
+        errorMessage.push("Please fill out all fields");
         return  errorMessage;
     }
 
@@ -197,7 +193,7 @@ function validateInputs() {
     return errorMessage;
 }
 
-function saveUpdateRender(e) {
+function saveUpdateRender() {
     clearErrors();
     if (validateInputs().length > 0) {
         let errorDiv = document.createElement('div');

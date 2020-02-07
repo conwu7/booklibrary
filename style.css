@@ -108,27 +108,38 @@ img {
     border: none;
 }
 
-button#deletebtn, button#editbtn {
+button#deletebtn, button#editbtn, button#readbtn {
     display: inline-block;
     background-color: antiquewhite;
 }
 
 button#deletebtn {
     float: right;
-    margin-right: 80px;
+    margin-right: 30px;
 }
 
-button#editbtn {
+button#editbtn, button#readbtn {
     background-color: lightyellow;
-    margin-left: 90px;
+    margin-left: 30px;
     border: solid lightgrey 1px;
     padding: 5px 10px;
-    max-width: 50px;
+    max-width: 100px;
     border-radius: 10px;
 }
 
-button#editbtn:hover {
+button#editbtn:hover, button#readbtn:hover {
     text-decoration: underline;
+}
+
+button#editbtn {
+    float: left;
+}
+
+button#readbtn {
+    background-color: yellow;
+    width: 100px;
+    margin-left: 40px;
+    opacity: 0.7;
 }
 
 

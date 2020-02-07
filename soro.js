@@ -15,7 +15,7 @@ let author = document.getElementById('author');
 let numPages = document.getElementById('numPages');
 let yearPub = document.getElementById('yearPub');
 
-let bookEntryCount = 1;
+let bookEntryCount = 0;
 let editMode;
 let currentKeyEditing;
 //Initializations
@@ -26,16 +26,14 @@ let book1 = {
     title: 'Flowers for Algernon',
     author: "Don't Actually know",
     numPages: 234,
-    yearPub: 1981,
-    bookEntryNum: 0
+    yearPub: 1981
 };
 
 let book2 = {
     title: 'If I Stay',
     author: "Gayle Forman",
     numPages: 360,
-    yearPub: 2004,
-    bookEntryNum: 1
+    yearPub: 2004
 };
 
 myLibrary.push(book1,book2); //temporary until you learn how to save
@@ -80,8 +78,6 @@ function Book() {
     this.author = author.value;
     this.numPages = numPages.value;
     this.yearPub = yearPub.value;
-    this.bookEntryNum = bookEntryCount+1;
-    bookEntryCount++;
 }
 
 //Empty, then populate div
@@ -113,6 +109,7 @@ function createDivForNewBook(bookObject) {
 
     let deleteImgButton = document.createElement('button');
     let editButton = document.createElement('button');
+    let readbtn = document.createElement('button');
 
     deleteImgButton.addEventListener('click',deleteBook);
     deleteImgButton.id = "deletebtn";
@@ -122,9 +119,16 @@ function createDivForNewBook(bookObject) {
     editButton.textContent = "Edit";
     editButton.id = 'editbtn';
 
+    readbtn.textContent = "Unread";
+    readbtn.id = "readbtn";
+
+    bookObject.bookEntryNum = bookEntryCount;
+    bookEntryCount++;
+
     bookDivContainer.dataset.bookEntryNum = `${bookObject.bookEntryNum}`;
     bookDivContainer.appendChild(bookDiv);
     bookDivContainer.appendChild(editButton);
+    bookDivContainer.appendChild(readbtn);
     bookDivContainer.appendChild(deleteImgButton);
     return bookDivContainer;
 }
@@ -180,8 +184,9 @@ function deleteBook(e) {
     // remove div then remove from array.
     let divToRemove = e.target.parentElement.parentElement;
     let bookEntryKey = divToRemove.dataset.bookEntryNum;
+    console.log(bookEntryKey);
     divToRemove.parentElement.removeChild(divToRemove);
-    myLibrary.splice(myLibrary.findIndex(obj => obj.bookEntryNum === bookEntryKey),1);
+    myLibrary.splice(myLibrary.findIndex(obj => obj.bookEntryNum == bookEntryKey),1);
 }
 
 //Event Listeners

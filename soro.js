@@ -12,29 +12,110 @@ let title = document.getElementById('title');
 let author = document.getElementById('author');
 let numPages = document.getElementById('numPages');
 let yearPub = document.getElementById('yearPub');
+let bookColor = document.getElementById('bookColor');
 
 let myLibrary = [];
 let bookEntryCount = 0;
 let editMode;
 let currentKeyEditing;
+let currentIndexForStorage;
 
 //get started
 inputElements.forEach(addBreak);
 
-let book1 = new Book('Flowers for Algernon','Daniel Keyes', 234, 1958);
-let book2 = new Book('If I stay', 'Gayle Forman', 360, 2009);
 
-myLibrary.push(book1,book2); //temporary until you learn how to save
+if (localStorage.length > 0) {
+    for (let i=0; i < localStorage.length; i++) {
+        let keyLS = localStorage.key(i);
+        if (keyLS === "storageIndex") {continue}
+        let objDeConv = JSON.parse(localStorage.getItem(keyLS));
+        objDeConv.toggleReadStatus = function() {
+            this.read = this.read === false;
+        };
+        myLibrary.push(objDeConv);
+        currentIndexForStorage = localStorage.getItem("storageIndex");
+    }
+} else {
+    currentIndexForStorage = 0;
+    let book1 = new Book('Flowers for Algernon','Daniel Keyes', 234, 1958, "#008b8b");
+    let book2 = new Book('If I stay', 'Gayle Forman', 360, 2009, "#b8860b");
+    myLibrary.push(book1,book2);
+    saveToLocalStorage(book1);
+    saveToLocalStorage(book2);
+}
+
+myLibrary.sort(function(a, b) {
+    return a.indexForStorage - b.indexForStorage;
+});
 myLibrary.forEach(object => {render(createDivContainerForBook(object))});
 
 //Functions
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+
+//temporary testing - from stackoverflow
+/* function SortLocalStorage(){
+    if(localStorage.length > 0){
+        var localStorageArray = new Array();
+        for (i=0;i<localStorage.length;i++){
+            localStorageArray[i] = localStorage.key(i)+localStorage.getItem(localStorage.key(i));
+        }
     }
-    return color;
+    var sortedArray = localStorageArray.sort();
+    return sortedArray;
+} */
+
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+function isContrastLow(colorOne, colorTwo) { //colorTwo should be the darker color.
+    let rgbColorOne = hexToRgb(colorOne);
+    let rgbColorTwo = hexToRgb(colorTwo);
+
+    for (const prop in rgbColorOne) {
+        // noinspection JSUnfilteredForInLoop
+        rgbColorOne[prop] /= 255;
+        if (rgbColorOne[prop] > 0) {
+            rgbColorOne[prop] = ((rgbColorOne[prop] + 0.055)/1.055)**2.4
+        } else {
+            // noinspection JSUnfilteredForInLoop
+            rgbColorOne[prop] = (rgbColorOne[prop]/12.92);
+        }
+    }
+    for (const prop in rgbColorTwo) {
+        rgbColorTwo[prop] /= 255;
+        if (rgbColorTwo[prop] > 0) {
+            rgbColorTwo[prop] = ((rgbColorTwo[prop] + 0.055)/1.055)**2.4
+        } else {
+            rgbColorTwo[prop] = (rgbColorTwo[prop]/12.92);
+        }
+    }
+
+    let l1 = (0.2126*rgbColorOne.r) + (0.7152*rgbColorOne.g) + (0.0722*rgbColorOne.b);
+    let l2 = (0.2126*rgbColorTwo.r) + (0.7152*rgbColorTwo.g) + (0.0722*rgbColorTwo.b);
+    let contrast =  (l1 + 0.05) / (l2 + 0.05);
+    return (contrast < 4.5);
+}
+
+function saveToLocalStorage(obj) {
+    let indexStorage = obj.indexForStorage;
+    let objConverted = JSON.stringify(obj);
+    localStorage.setItem(`${indexStorage}`, objConverted);
+}
+
+function removeFromLocalStorage(obj) {
+    let indexStorage = obj.indexForStorage;
+    localStorage.removeItem(indexStorage);
 }
 
 function addBreak(e) {
@@ -43,7 +124,13 @@ function addBreak(e) {
 }
 
 function clearValues() {
-    inputElements.forEach(element => element.value='');
+    inputElements.forEach(element => {
+        if (element.id === "bookColor") {
+            element.value = "#FBF2E3"
+        } else {
+            element.value = ''
+        }
+    });
     editMode = false;
 }
 
@@ -66,42 +153,48 @@ function hideForm() {
 }
 
 //ADDING BOOKS
-function Book(aTitle, aAuthor, aNumPages, aYearPub) {
+function Book(aTitle, aAuthor, aNumPages, aYearPub, aBookColor) {
     if (arguments.length > 0) {
         this.title = aTitle;
         this.author = aAuthor;
         this.numPages = aNumPages;
         this.yearPub = aYearPub;
+        this.bookColor = aBookColor;
     } else {
         this.title = title.value;
         this.author = author.value;
         this.numPages = numPages.value;
         this.yearPub = yearPub.value;
+        this.bookColor = bookColor.value;
     }
-    this.read = false;
-}
 
-Book.prototype.toggleReadStatus = function () {
-    this.read = this.read === false;
-};
+    this.indexForStorage = currentIndexForStorage;
+    currentIndexForStorage++;
+    localStorage.setItem("storageIndex", currentIndexForStorage.toString());
+    this.read = false;
+    this.toggleReadStatus = function() {
+        this.read = this.read === false;
+    }
+}
 
 //Empty, then populate div
 function updateBookDiv(divEl, bookObject) {
-    let currentColor = "";
-    if (divEl.style.backgroundColor) currentColor = divEl.style.backgroundColor;
-
     divEl.innerHTML = "";
 
-    divEl.innerHTML += `<h2>${bookObject.title}</h2>`;
+    divEl.innerHTML += `<h2>${bookObject.title.toLocaleUpperCase()}</h2>`;
     divEl.innerHTML += `<h4><span class="prefixValues">by </span>${bookObject.author}</h4>`;
     divEl.innerHTML += `<h5>${bookObject.numPages} <span>pages</span></h5>`;
     divEl.innerHTML += `<h5><span class="prefixValues">Published in </span> ${bookObject.yearPub}</h5>`;
 
     divEl.classList.add("bookDetails");
-    divEl.style.opacity = "0.6";
 
-    if (currentColor.length > 2) { divEl.style.backgroundColor = currentColor}
-    else {divEl.style.backgroundColor = getRandomColor();}
+
+    divEl.style.backgroundColor = bookObject.bookColor;
+    if (isContrastLow(bookObject.bookColor, "#000000")) {
+        divEl.style.color = 'antiquewhite';
+    } else {
+        divEl.style.color = 'black';
+    }
 
     return divEl;
 }
@@ -125,13 +218,22 @@ function createDivContainerForBook(bookObject) {
     editButton.classList.add('editbtn');
 
     readButton.addEventListener('click', toggleObjReadStatus);
-    readButton.textContent = "Unread";
     readButton.classList.add('readbtn');
+
+    if (bookObject.read) {
+        readButton.textContent = "Read";
+        readButton.style.backgroundColor = "Green";
+    } else {
+        readButton.textContent = "Unread";
+    }
 
     bookObject.bookEntryNum = bookEntryCount;
     bookEntryCount++;
 
     bookDivContainer.dataset.bookEntryNum = `${bookObject.bookEntryNum}`;
+
+
+
     bookDivContainer.appendChild(bookDiv);
     bookDivContainer.appendChild(editButton);
     bookDivContainer.appendChild(readButton);
@@ -158,6 +260,7 @@ function editBook(e) {
     author.value = myLibrary[indexOfObj].author;
     numPages.value = myLibrary[indexOfObj].numPages;
     yearPub.value = myLibrary[indexOfObj].yearPub;
+    bookColor.value = myLibrary[indexOfObj].bookColor;
 }
 
 function toggleObjReadStatus(e) {
@@ -172,6 +275,7 @@ function toggleObjReadStatus(e) {
         e.target.textContent = "Unread";
         e.target.style.backgroundColor = "Yellow";
     }
+    saveToLocalStorage(myLibrary[indexOfObj]);
 }
 
 function validateInputs() {
@@ -212,16 +316,19 @@ function saveUpdateRender() {
         myLibrary[currentKeyEditing].author = author.value;
         myLibrary[currentKeyEditing].numPages = numPages.value;
         myLibrary[currentKeyEditing].yearPub = yearPub.value;
+        myLibrary[currentKeyEditing].bookColor = bookColor.value;
 
         let bookDiv = document.querySelector(`[data-book-entry-num="${currentKeyEditing}"]`).firstElementChild;
         updateBookDiv(bookDiv, myLibrary[currentKeyEditing]);
 
         editMode = false;
+        saveToLocalStorage(myLibrary[currentKeyEditing]);
     } else {
         let newBook = new Book();
         myLibrary.push(newBook);
         let newBookElement = createDivContainerForBook(newBook);
         render(newBookElement);
+        saveToLocalStorage(newBook);
     }
 
     hideForm();
@@ -232,8 +339,12 @@ function deleteBook(e) {
     // remove div then remove from array.
     let divToRemove = e.target.parentElement.parentElement;
     let bookEntryKey = +(divToRemove.dataset.bookEntryNum);
+    let objIndex = myLibrary.findIndex(obj => obj.bookEntryNum === bookEntryKey);
     divToRemove.parentElement.removeChild(divToRemove);
-    myLibrary.splice(myLibrary.findIndex(obj => obj.bookEntryNum === bookEntryKey),1);
+    console.log(objIndex);
+    removeFromLocalStorage(myLibrary[objIndex]);
+    myLibrary.splice(objIndex,1);
+
 }
 
 function preventEnterOnButtons(e) {

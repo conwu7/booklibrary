@@ -4,6 +4,10 @@
 
 body {
     background-color: antiquewhite;
+    background-image: url("bookBackground4.jpeg");
+    background-size: cover;
+    background-blend-mode: color-burn;
+
     margin: 0;
 }
 
@@ -67,6 +71,7 @@ label {
     border-radius: 15px;
     padding: 50px;
     min-width: 550px;
+    background: rgba(250, 235, 215, 0.8);
 }
 
 button {

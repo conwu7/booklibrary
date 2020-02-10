@@ -44,25 +44,12 @@ if (localStorage.length > 0) {
     saveToLocalStorage(book2);
 }
 
-myLibrary.sort(function(a, b) {
+myLibrary.sort(function(a, b) { //Doing this until I figure out how local storage indexes new items
     return a.indexForStorage - b.indexForStorage;
 });
 myLibrary.forEach(object => {render(createDivContainerForBook(object))});
 
 //Functions
-
-//temporary testing - from stackoverflow
-/* function SortLocalStorage(){
-    if(localStorage.length > 0){
-        var localStorageArray = new Array();
-        for (i=0;i<localStorage.length;i++){
-            localStorageArray[i] = localStorage.key(i)+localStorage.getItem(localStorage.key(i));
-        }
-    }
-    var sortedArray = localStorageArray.sort();
-    return sortedArray;
-} */
-
 function hexToRgb(hex) {
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
     let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;

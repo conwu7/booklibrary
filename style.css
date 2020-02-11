@@ -116,21 +116,20 @@ img {
     display: flex;
     margin: auto;
     padding: 0;
-    max-width: 30px;
+    max-width: 40px;
     border: none;
 }
 
 button.deletebtn, button.editbtn, button.readbtn {
     display: inline-block;
     background-color: antiquewhite;
-    height: 35px;
+    height: 40px;
     font-size: 100%;
 }
 
 button.deletebtn {
     float: right;
     margin-right: 30px;
-    border-radius: 6px;
 }
 
 button.editbtn, button.readbtn {
@@ -139,7 +138,7 @@ button.editbtn, button.readbtn {
     border: solid lightgrey 1px;
     padding: 5px 10px;
     max-width: 100px;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 button.editbtn:hover, button.readbtn:hover {
@@ -200,8 +199,11 @@ button.readbtn {
         max-height: 150px;
     }
     button.editbtn, button.readbtn, button.deletebtn {
-        transform: scale(2);
-        margin-top: 20px;
+        font-size: 100%;
+        height: 50px;
+    }
+    button.deletebtn {
+        max-width: 50px;
     }
     label {
         width: 150px;

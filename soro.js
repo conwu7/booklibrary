@@ -83,11 +83,11 @@ const BookModule = (function () {
         let colorTwoRGB = _hexToRgb(colorTwo);
         const formatRGB = (colorObj) => {
             let colorKeys = Object.keys(colorObj);
-            for (const key in colorKeys) {
+            colorKeys.forEach(function(key) {
                 colorObj[key] /= 255;
                 colorObj[key] = colorObj[key] > 0 ? ((colorObj[key]
                     + 0.055) / 1.055) ** 2.4 : colorObj[key] / 12.92;
-            }
+            });
             return colorObj;
         };
         colorOneRGB = formatRGB(colorOneRGB);
@@ -140,8 +140,8 @@ const BookModule = (function () {
         } else {
             this.title = title.value;
             this.author = author.value;
-            this.numPages = numPages.value;
-            this.yearPub = yearPub.value;
+            this.numPages = +(numPages.value);
+            this.yearPub = +(yearPub.value);
             this.bookColor = bookColor.value;
         }
 

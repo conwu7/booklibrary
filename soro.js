@@ -21,14 +21,14 @@ const LibraryElements = (() => {
         e.parentNode.insertBefore(br, e.nextElementSibling);
     }
     const addEventHandlers = () => {
+        saveBookButton.addEventListener('touchstart click', BookModule.saveUpdateRender);
+        newBookButton.addEventListener('touchstart click', BookModule.unHideForm);
+        cancelButton.addEventListener('touchstart click', BookModule.hideForm);
+        window.addEventListener('touchstart click', BookModule.preventEnterOnButtons);
         saveBookButton.addEventListener('click', BookModule.saveUpdateRender);
         newBookButton.addEventListener('click', BookModule.unHideForm);
         cancelButton.addEventListener('click', BookModule.hideForm);
         window.addEventListener('keypress', BookModule.preventEnterOnButtons);
-        saveBookButton.addEventListener('touchend', BookModule.saveUpdateRender);
-        newBookButton.addEventListener('touchend', BookModule.unHideForm);
-        cancelButton.addEventListener('touchend', BookModule.hideForm);
-        window.addEventListener('touchend', BookModule.preventEnterOnButtons);
     };
     return {addEventHandlers, displayContainer, inputElements, bookForm, newBookForm,saveBookButton, newBookButton, cancelButton,
         title, author, numPages, yearPub, bookColor}

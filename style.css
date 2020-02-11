@@ -123,11 +123,14 @@ img {
 button.deletebtn, button.editbtn, button.readbtn {
     display: inline-block;
     background-color: antiquewhite;
+    height: 35px;
+    font-size: 100%;
 }
 
 button.deletebtn {
     float: right;
     margin-right: 30px;
+    border-radius: 6px;
 }
 
 button.editbtn, button.readbtn {

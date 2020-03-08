@@ -40,6 +40,7 @@ const BookModule = (function () {
     let editMode, currentKeyEditing, currentIndexForStorage;
     //local storage to myLibrary and then render. if empty, use two default books.
     if (localStorage.length > 0) {
+        currentIndexForStorage = localStorage.getItem("storageIndex");
         for (let i=0; i < localStorage.length; i++) {
             let keyLS = localStorage.key(i);
             if (keyLS === "storageIndex") {continue}
@@ -48,7 +49,6 @@ const BookModule = (function () {
                 this.read = this.read === false;
             };
             myLibrary.push(objDeConv);
-            currentIndexForStorage = localStorage.getItem("storageIndex");
         }
     } else {
         currentIndexForStorage = 0;
@@ -127,7 +127,6 @@ const BookModule = (function () {
         _clearElementValues(LibraryElements.inputElements);
         editMode = false;
     }
-
 
     //Public functions
     function Book(aTitle, aAuthor, aNumPages, aYearPub, aBookColor) {

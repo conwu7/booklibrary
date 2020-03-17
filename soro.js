@@ -30,8 +30,8 @@ const LibraryElements = (() => {
         cancelButton.addEventListener('click', BookModule.hideForm);
         window.addEventListener('keypress', BookModule.preventEnterOnButtons);
     };
-    return {addEventHandlers, displayContainer, inputElements, bookForm, newBookForm,saveBookButton, newBookButton, cancelButton,
-        title, author, numPages, yearPub, bookColor}
+    return {addEventHandlers, displayContainer, inputElements, bookForm, newBookForm,saveBookButton, newBookButton,
+        cancelButton, title, author, numPages, yearPub, bookColor}
 })();
 
 const BookModule = (function () {
@@ -39,11 +39,11 @@ const BookModule = (function () {
     let bookEntryCount = null;
     let editMode, currentKeyEditing, currentIndexForStorage;
     //local storage to myLibrary and then render. if empty, use two default books.
-    if (localStorage.length > 0) {
+    if (localStorage.length > 0 && localStorage.getItem('storageIndex')) {
         currentIndexForStorage = localStorage.getItem("storageIndex");
         for (let i=0; i < localStorage.length; i++) {
             let keyLS = localStorage.key(i);
-            if (keyLS === "storageIndex") {continue}
+            if (!keyLS.includes('BOOK')) {continue}
             let objDeConv = JSON.parse(localStorage.getItem(keyLS));
             objDeConv.toggleReadStatus = function() {
                 this.read = this.read === false;
@@ -52,8 +52,10 @@ const BookModule = (function () {
         }
     } else {
         currentIndexForStorage = 0;
-        let book1 = new Book('Flowers for Algernon','Daniel Keyes', 234, 1958, "#008b8b");
-        let book2 = new Book('If I stay', 'Gayle Forman', 360, 2009, "#b8860b");
+        let book1 = new Book('Flowers for Algernon','Daniel Keyes',
+            234, 1958, "#008b8b");
+        let book2 = new Book('If I stay', 'Gayle Forman',
+            360, 2009, "#b8860b");
         myLibrary.push(book1,book2);
         _saveObjToLocalStorage(book1);
         _saveObjToLocalStorage(book2);
@@ -99,11 +101,11 @@ const BookModule = (function () {
         return (contrast < 4.5);
     }
     function _saveObjToLocalStorage(obj) { //object should have an indexForStorage property
-        localStorage.setItem(`${obj.indexForStorage}`, JSON.stringify(obj));
+        localStorage.setItem(`BOOK${obj.indexForStorage}`, JSON.stringify(obj));
     }
 
     function _removeObjFromLocalStorage(obj) {//object should have an indexForStorage property
-        localStorage.removeItem(obj.indexForStorage);
+        localStorage.removeItem(`BOOK${obj.indexForStorage}`);
     }
     function _clearElementValues(elementArray) { //accepts array of elements. clears the values
         elementArray.forEach(element => {
@@ -245,8 +247,8 @@ const BookModule = (function () {
     }
     function _validateInputs() {
         let errorMessage = [];
-        if (LibraryElements.title.value === "" || LibraryElements.author.value === "" || LibraryElements.numPages.value === ""
-            || LibraryElements.yearPub.value === "") {
+        if (LibraryElements.title.value === "" || LibraryElements.author.value === "" ||
+            LibraryElements.numPages.value === "" || LibraryElements.yearPub.value === "") {
             errorMessage.push("Please fill out all fields");
             return  errorMessage;
         }
@@ -283,7 +285,8 @@ const BookModule = (function () {
             myLibrary[currentKeyEditing].yearPub = LibraryElements.yearPub.value;
             myLibrary[currentKeyEditing].bookColor = LibraryElements.bookColor.value;
 
-            let bookDiv = document.querySelector(`[data-book-entry-num="${currentKeyEditing}"]`).firstElementChild;
+            let bookDiv = document.querySelector(
+                `[data-book-entry-num="${currentKeyEditing}"]`).firstElementChild;
             _updateBookDiv(bookDiv, myLibrary[currentKeyEditing]);
             editMode = false;
             _saveObjToLocalStorage(myLibrary[currentKeyEditing]);
